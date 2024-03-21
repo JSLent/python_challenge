@@ -6,7 +6,7 @@ budget_csv = os.path.join("..", "python_challenge","PyBank", "Resources", "budge
 # Path to the election data CSV file
 election_csv = os.path.join("..", "python_challenge", "PyPoll", "Resources", "election_data.csv")
 
-#create a set to store unique months
+#make a set to store unique months
 unique_months= set()
 
 #create total variable to store total
@@ -15,7 +15,7 @@ total = 0
 #create total vote variable to store total
 total_votes = 0
 
-#dictionary to store candidate votes
+#make dictionary to store candidate votes
 candidate_votes = {}  
 
 #create variables to store the total change and previous rows value, max increase and max decrease and dates
@@ -27,26 +27,36 @@ max_increase_date = None
 max_decrease_date = None
 
 #counter for number of changes
-
 num_changes = 0
 
 with open(budget_csv) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=",")
-    csv_header = next(csv_reader) #skip header row
-    month_index = csv_header.index("Date") #get index of the date column
-    total_index = csv_header.index("Profit/Losses") #get index of the profit/losses column
+    #skip header row
+    csv_header = next(csv_reader) 
+    #get index of the date column
+    month_index = csv_header.index("Date") 
+    #get index of the profit/losses column
+    total_index = csv_header.index("Profit/Losses") 
+    #get index of the average change profit/losses column
     average_change = csv_header.index("Profit/Losses")
 
     for row in csv_reader:
         unique_months.add(row[month_index])
-        total += float(row[total_index]) #change value to float before adding it to the total
-        value = float(row[average_change]) #change to float
-        date = row[month_index] #get the date
-    
-        if prev_value is not None: #skip first row bc no previous
-            change = value - prev_value #calculate change from prev row
-            total_change+= change #add the change to the total change
-            num_changes += 1 #increment the counter
+        #change value to float before adding it to the total
+        total += float(row[total_index]) 
+        #change to float
+        value = float(row[average_change]) 
+        #get the date
+        date = row[month_index] 
+
+        #skip first row bc no previous
+        if prev_value is not None: 
+            #calculate change from prev row
+            change = value - prev_value 
+            #add the change to the total change
+            total_change+= change 
+            #increment the counter
+            num_changes += 1 
 
             #check if the change is a new max increase or max decrease
             if change > max_increase:
@@ -56,7 +66,8 @@ with open(budget_csv) as csv_file:
                 max_decrease = change
                 max_decrease_date = date
 
-        prev_value = value #update prev row value
+        #update prev row value
+        prev_value = value 
 
 #calculate avg change
 average_change = total_change/num_changes
@@ -81,16 +92,18 @@ with open(output_path, 'w') as txtfile:
     txtfile.write(f"Total Months: {len(unique_months)}\n")
     txtfile.write(f"Total: ${total:.2f}\n")
     txtfile.write(f"Average Change: ${average_change:.2f}\n")
-    txtfile.write(f"Max Increase in Profits: {max_increase_date} ${(max_increase):.2f}\n")
-    txtfile.write(f"Max Decrease in Profits: {max_decrease_date} ${(max_decrease):.2f}\n")
+    txtfile.write(f"Max Increase in Profits: {max_increase_date} ${max_increase:.2f}\n")
+    txtfile.write(f"Max Decrease in Profits: {max_decrease_date} ${max_decrease:.2f}\n")
 
 #Read the election data
 with open(election_csv) as csv_file:
     csv_reader = csv.reader(csv_file)
-    next(csv_reader)  # Skip header row
+    # Skip header row
+    next(csv_reader)  
     for row in csv_reader:
         total_votes += 1
-        candidate = row[2]  # Candidate name is in the third column
+        # Candidate name is in the third column
+        candidate = row[2]  
         if candidate not in candidate_votes:
             candidate_votes[candidate] = 0
         candidate_votes[candidate] += 1
